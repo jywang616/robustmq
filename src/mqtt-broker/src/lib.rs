@@ -70,6 +70,7 @@ pub mod observability;
 pub mod security;
 pub mod server;
 pub mod storage;
+pub mod inner;
 mod subscribe;
 
 pub fn start_mqtt_broker_server(stop_send: broadcast::Sender<bool>) {
