@@ -30,7 +30,6 @@ use std::sync::Arc;
 use common_base::config::broker_mqtt::broker_mqtt_conf;
 use metadata_struct::mqtt::lastwill::LastWillData;
 
-
 pub async fn update_cache_by_req(
     cache_manager: Arc<CacheManager>,
     connector_manager: Arc<ConnectorManager>,
@@ -40,7 +39,7 @@ pub async fn update_cache_by_req(
 ) -> Result<UpdateMqttCacheReply, MqttBrokerError> {
     let conf = broker_mqtt_conf();
     if conf.cluster_name != req.cluster_name {
-        Ok(UpdateMqttCacheReply::default());
+        Ok(UpdateMqttCacheReply::default())
     }
     
     update_cache_metadata(
@@ -51,7 +50,7 @@ pub async fn update_cache_by_req(
         req,
     )
     .await?;
-    Ok(UpdateMqttCacheReply::default());
+    Ok(UpdateMqttCacheReply::default())
 }
 
 pub async fn delete_session_by_req(
@@ -74,7 +73,7 @@ pub async fn delete_session_by_req(
         cache_manager.remove_session(&client_id);
     }
 
-    Ok(DeleteSessionReply::default());
+    Ok(DeleteSessionReply::default())
 }
 
 pub async fn send_last_will_message_by_req(
@@ -102,5 +101,5 @@ pub async fn send_last_will_message_by_req(
         message_storage_adapter.clone(),
     )
     .await;
-    Ok(SendLastWillMessageReply::default());
+    Ok(SendLastWillMessageReply::default())
 }
