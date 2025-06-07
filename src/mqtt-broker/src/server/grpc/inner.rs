@@ -14,9 +14,7 @@
 
 use std::sync::Arc;
 
-use common_base::config::broker_mqtt::broker_mqtt_conf;
 use grpc_clients::pool::ClientPool;
-use metadata_struct::mqtt::lastwill::LastWillData;
 use protocol::broker_mqtt::broker_mqtt_inner::mqtt_broker_inner_service_server::MqttBrokerInnerService;
 use protocol::broker_mqtt::broker_mqtt_inner::{
     DeleteSessionReply, DeleteSessionRequest, SendLastWillMessageReply, SendLastWillMessageRequest,
@@ -29,7 +27,6 @@ use tracing::{debug, info};
 
 use crate::bridge::manager::ConnectorManager;
 use crate::handler::cache::CacheManager;
-use crate::handler::cache_update::update_cache_metadata;
 use crate::handler::lastwill::send_last_will_message;
 use crate::subscribe::manager::SubscribeManager;
 use crate::inner::services::{
@@ -76,10 +73,10 @@ where
     ) -> Result<Response<UpdateMqttCacheReply>, Status> {
         let req = request.into_inner();
         update_cache_by_req(
-            &self.cache_manager,
-            &self.connector_manager,
-            &self.subscribe_manager,
-            &self.schema_manager,
+            self.cache_manager,
+            self.connector_manager,
+            self.subscribe_manager,
+            self.schema_manager,
             &req
         )
         .await
@@ -92,7 +89,7 @@ where
         request: Request<DeleteSessionRequest>,
     ) -> Result<Response<DeleteSessionReply>, Status> {
         let req = request.into_inner();
-        delete_session_by_req(&self.connector_manager,&self.subscribe_manager,&self.schema_manager,&req)
+        delete_session_by_req(&self.connector_manager,self.subscribe_manager,self.schema_manager,&req)
         .await
         .map_err(|e| Status::internal(e.to_string()))
         .map(Response::new)
